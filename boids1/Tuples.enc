@@ -50,6 +50,14 @@ passive class Vector3D
     ()
   }
 
+  def div(r: real): void {()}
+
+  def mag(): int {()}
+
+  def normalize(): void {()}
+
+  def mult(r: real): void {()}
+
 passive class Coord
   x: int
   y: int

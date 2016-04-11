@@ -92,10 +92,16 @@ class Boid {
           diff.normalize();
           diff.div(dist);
           steer.add(diff);
-          count = count + 1;
+          count = count + 1
         }
-    }
-    -- if (count > 0) then steer.div(count);
-
+    };
+    if (count > 0) then steer.div(count);
+    if steer.mag() > 0 then {
+      steer.normalize();
+      steer.mult(maxspeed);
+      steer.sub(velocity);
+      steer.limit(maxforce);
+    };
+    steer
   }
 }
