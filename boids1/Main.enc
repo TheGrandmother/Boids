@@ -43,7 +43,8 @@ class Flock
 		this.alter = true;
     this.len    = 0;
     this.boids = new [Boid](size);
-    this.bdata = new [BoidData](size)
+    this.bdata = new [BoidData](size);
+    this.bdata2 = new [BoidData](size)
   }
 
   def createBoid(loc: Vector2D): void {
