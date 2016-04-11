@@ -25,10 +25,14 @@ passive class BoidData {
 class Boid {
   id: int
   data: BoidData
+  width: int
+  height: int
 
-  def init(id: int, loc: Vector2D): void {
+  def init(id: int, loc: Vector2D, width: int, height: int): void {
     this.id = id;
     this.data = new BoidData(loc);
+    this.weight = weight;
+    this.height = height;
   }
 
   def move(boids: [BoidData]): void {
@@ -90,7 +94,6 @@ class Boid {
     steer.limit(this.data.maxforce);
     steer;
   }
-
   -- Alignment
   -- For every nearby boid in the system, calculate the average velocity
   def align (boids: [BoidData]) : Vector2D {
@@ -144,22 +147,22 @@ class Boid {
     }
   }
 
-  def borders(): void{
-      if (this.data.location.x < (0-r) ) then {
-  			this.data.location.x = width + r;
+  def borders(sendable: Vector2D): void{
+      if (sendable.x < (0-this.data.r) ) then {
+  			sendable.x = this.width + this.data.r;
   		};
 
-      if (this.data.location.y < (0-r) ) then {
-  			this.data.location.y = height + r;
+      if (sendable.y < (0-this.data.r) ) then {
+  			sendable.y = this.height + this.data.r;
   		};
       
-			if (this.data.location.x < (width+r) ) then {
-  			this.data.location.x = 0-r;
+			if (sendable.x < (this.width+this.data.r) ) then {
+  			sendable.x = 0-this.data.r;
 			};
 
 
-      if (this.data.location.y < (height+r) ) then {
-  			this.data.location.y = 0-r;
+      if (sendable.y < (this.height+this.data.r) ) then {
+  			sendable.y = 0-this.data.r;
 			};
 		}
 }
