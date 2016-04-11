@@ -22,7 +22,8 @@ passive class BoidData {
       res.acceleration = this.acceleration.clone();
       res.r = this.r;
       res.maxforce = this.maxforce;
-      res.maxspeed = this.maxspeed
+      res.maxspeed = this.maxspeed;
+      res
     }
   }
 }
