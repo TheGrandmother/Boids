@@ -15,7 +15,7 @@ class Main {
     let nBoids = 100;
     let nSteps = 100;
 
-    let flock = new Flock(nSteps, this.width, this.height);
+    let flock = new Flock(nSteps, this.width, this.height, nBoids);
     repeat i <- nBoids {
       flock.createBoid(new Vector2D(this.width/2, this.height/2))
     };
@@ -26,48 +26,28 @@ class Main {
 class Flock
   boids : [Boid] -- Use static array as a size
   bdata : [BoidData]
-  cap   : int    -- Capacity
   len   : int    -- Actual length
   moved : int
   steps : int
   width : int
   height: int
 
-  def init(steps: int, width: int, height: int) : void {
-    this.cap = 1000;
-    this.len = 0;
+  def init(steps: int, width: int, height: int, size: int) : void {
     this.moved = 0;
     this.steps = steps;
     this.width = width;
     this.height = height;
-    this.boids = new [Boid](this.cap);
-    this.bdata = new [BoidData](this.cap)
+    this.len    = 0;
+    this.boids = new [Boid](size);
+    this.bdata = new [BoidData](size)
   }
 
   def createBoid(loc: Vector2D): void {
-    if (this.len >= this.cap) then
-      let
-        newBoids = new [Boid](this.cap + 10)
-        newData  = new [BoidData](this.cap + 10)
-      in {
-        repeat i <- this.len {
-          newBoids[i] = this.boids[i];
-          newData[i] = this.bdata[i];
-        };
-        this.boids = newBoids;
-        this.bdata = newData;
-        this.cap = this.cap + 10
-        -- this.len unchanged
-      };
     let bd = new BoidData(loc);
     let b = new Boid(this.len, bd, this.width, this.height);
     this.boids[this.len] = b;
     this.bdata[this.len] = bd;
     this.len = this.len + 1
-  }
-
-  def size(): int {
-    this.len
   }
 
   def step(): void {
@@ -81,7 +61,7 @@ class Flock
   def ack(bd: BoidData, i: int): void {
     this.bdata[i] = bd;
     this.moved = this.moved + 1;
-    if this.moved == this.size() then {
+    if this.moved == |this.boids| then {
       this.moved = 0;
       this!step()
     }
