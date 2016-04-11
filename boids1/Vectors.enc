@@ -45,14 +45,14 @@ passive class Vector2D
   }
 
   def mul(r: real): Vector2D {
-		new Vector2D(this.x * r, this.y * r)
+    new Vector2D(this.x * r, this.y * r)
   }
 
   def limit(r : real) : Vector2D {
     let magn = this.magnitude();
     if (magn > r) then {
       this.normalize().mul(r);
-    }else{
-			new Vector2D(this.x,this.y)
-		}
+    } else{
+      new Vector2D(this.x,this.y)
+    }
   }
