@@ -10,8 +10,8 @@ if __name__ == "__main__":
 	s = 0.1
 	lines = 3
 	offs = (2*PI)/lines
-	scale = 30
-	stuff = 100;
+	scale = 50
+	stuff = 250;
 	
 	for bob in range(100):
 		t = t + 0.15
