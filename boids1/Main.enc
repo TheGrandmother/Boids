@@ -5,7 +5,12 @@ import Tuples
 class Main {
 
   def main(args: [String]): void {
-    print ("Hi! {}", |args|)
+    setSeed(1);
+    print("Hi! {}\n", |args|);
+    print("RandomReal is {}\n", randomReal(0, 10));
+    print("RandomReal is {}\n", randomReal(0, 10));
+    print("RandomReal is {}\n", randomReal(0, 10));
+    print("RandomReal is {}\n", randomReal(0, 10));
   }
 }
 
