@@ -1,11 +1,23 @@
+embed
+  #include <math.h>
+end
 
+def sqrt(x: real): real {
+  embed real sqrt(#{x}); end;
+}
+
+def abs(x: real): real {
+  if x < 0
+  then 0-x
+  else x
+}
 
 def cos(x: real): real {
-  1.0
+  embed real cos(#{x}); end
 }
 
 def sin(x: real): real {
-  1.0
+  embed real sin(#{x}); end
 }
 
 
