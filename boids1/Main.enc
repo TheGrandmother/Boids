@@ -34,12 +34,23 @@ class Boid {
     let steer = new Vector3D(0.0, 0.0, 0.0);
     let count = 0;
 
-    -- for boid in voids {
-    --   ()
+    -- For every boid in the system, check if it's too close
+    -- for boid in boids {
+    --   let dist = this.location.distance(boid.location);
+    --     ()
+    --   -- if d > 0 and d < desiredseparation then {
+    --   -- }
+    --     -- let
+    --     --     PVector diff = PVector.sub(location, other.location);
+    --     --     diff.normalize();
+    --     --     diff.div(d);        // Weight by distance
+    --     --     steer.add(diff);
+    --     --     count++;            // Keep track of how many
+    --
+    --   -- }
     -- }
 
 
-    -- For every boid in the system, check if it's too close
 
     -- for (Boid other : boids) {
     --   float d = PVector.dist(location, other.location);
@@ -83,7 +94,20 @@ passive class Vector2D
     this.y = y
   }
 
-passive class Vector3D {
+  def distance(other: Vector2D): real {
+    0.0 -- TODO
+  }
+
+  def diff(other: Vector2D): real {
+    0.0
+  }
+
+  def sub(other: Vector2D): real {
+    0.0
+  }
+
+
+passive class Vector3D
   x: real
   y: real
   z: real
@@ -93,7 +117,18 @@ passive class Vector3D {
     this.y = y;
     this.z = z
   }
-}
+
+  def distance(other: Vector3D): real {
+    0.0
+  }
+
+  def diff(other: Vector3D): real {
+    0.0
+  }
+
+  def sub(other: Vector3D): real {
+    0.0
+  }
 
 passive class Coord
   x: int
@@ -102,4 +137,13 @@ passive class Coord
   def init(x: int, y: int): void {
     this.x = x;
     this.y = y
+  }
+
+  def diff(other: Coord): Vector2D {
+    null
+  }
+
+
+  def sub(other: Coord): real {
+    0.0
   }
