@@ -52,7 +52,8 @@ class Boid {
     sendable.velocity.limit(sendable.maxspeed);
     sendable.location.add(sendable.velocity);
     -- Reset accelertion to 0 each cycle
-    sendable.acceleration.mul(0)
+    sendable.acceleration.mul(0);
+    this.borders();
   }
 
   def separation(boids: [BoidData]): Vector2D {
@@ -142,4 +143,23 @@ class Boid {
       new Vector2D(0, 0);
     }
   }
+
+  def borders(): void{
+      if (this.data.location.x < (0-r) ) then {
+  			this.data.location.x = width + r;
+  		};
+
+      if (this.data.location.y < (0-r) ) then {
+  			this.data.location.y = height + r;
+  		};
+      
+			if (this.data.location.x < (width+r) ) then {
+  			this.data.location.x = 0-r;
+			};
+
+
+      if (this.data.location.y < (height+r) ) then {
+  			this.data.location.y = 0-r;
+			};
+		}
 }
