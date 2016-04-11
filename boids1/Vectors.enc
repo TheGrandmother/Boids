@@ -26,7 +26,7 @@ passive class Vector2D
   }
 
   def sub(other: Vector2D): Vector2D {
-    new Vector2D(other.x - this.x, other.y - this.y)
+    new Vector2D(this.x - other.x, this.y - other.y)
   }
 
   def add(other: Vector2D): Vector2D {

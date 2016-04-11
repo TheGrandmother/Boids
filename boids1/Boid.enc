@@ -56,7 +56,7 @@ class Boid {
     let coh = this.cohesion(boids);
     -- Arbitrarily weight these forces
     let weightedSep = sep.mul(1.0);
-    let weightedAli = ali.mul(1.0);
+    let weightedAli = ali.mul(7.0);
     let weightedCoh = coh.mul(1.5);
     -- Add the force vectors to acceleration
     sendable.acceleration = sendable.acceleration.add(weightedSep).
