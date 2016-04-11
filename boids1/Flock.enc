@@ -1,3 +1,5 @@
+import Boid
+
 class Flock
   boids : [Boid] -- Use static array as a size
   cap   : int    -- Capacity
@@ -9,16 +11,16 @@ class Flock
     this.boids = new [Boid](this.cap)
   }
 
-  def add(boid: Boid): void {
+  def add(b: Boid): void {
     if (this.len >= this.cap) then
-      let newBoid = new [Boid](this.cap + 10) in {
+      let newBoids = new [Boid](this.cap + 10) in {
         repeat i <- this.len
-          newBoid[i] = this.boids;
-        this.boid = newBoid;
-        this.cap  = cap + 10
+          newBoids[i] = this.boids[i];
+        this.boids = newBoids;
+        this.cap  = this.cap + 10
         -- this.len unchanged
       };
-    this.boids[this.len] = boid;
+    this.boids[this.len] = b;
     this.len = this.len + 1
   }
 
