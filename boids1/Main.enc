@@ -12,7 +12,7 @@ class Boid {
   id: int
   location: Coord
   velocity: Vector2D
-  acceleration: Vector3D
+  acceleration: Vector2D
   r: real
   maxforce: real    -- Maximum steering force
   maxspeed: real    -- Maximum speed
@@ -20,10 +20,10 @@ class Boid {
   def init(id: int, loc: Coord): void {
     this.id = id;
     this.location = loc;
-    this.acceleration = new Vector(0.0, 0.0);
+    this.acceleration = new Vector2D(0.0, 0.0);
 
     let angle = random(6.28) ; -- ?
-    this.velocity = new Vector(cos(angle), sin(angle));
+    this.velocity = new Vector2D(cos(angle), sin(angle));
     this.r = 2.0;
     this.maxspeed = 2.0;
     this.maxforce = 0.03;
@@ -34,9 +34,9 @@ class Boid {
     let steer = new Vector3D(0.0, 0.0, 0.0);
     let count = 0;
 
-    for boid in voids {
-      ()
-    }
+    -- for boid in voids {
+    --   ()
+    -- }
 
 
     -- For every boid in the system, check if it's too close
