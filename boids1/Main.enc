@@ -1,6 +1,6 @@
 import Random
 -- import Util -- commented to avoid duplicate inclusion
-import Vectors
+import Vector
 import Boid
 
 class Main {
