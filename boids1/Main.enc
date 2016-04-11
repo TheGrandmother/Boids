@@ -8,12 +8,12 @@ class Main {
   height: int
 
   def main(args: [String]): void {
-    setSeed(1);
+    setSeed(5);
 
     this.width = 500;
     this.height = 500;
-    let nBoids = 100;
-    let nSteps = 100;
+    let nBoids = 2;
+    let nSteps = 1000;
 
     let flock = new Flock(nSteps, this.width, this.height, nBoids);
     repeat i <- nBoids {
@@ -26,6 +26,8 @@ class Main {
 class Flock
   boids : [Boid] -- Use static array as a size
   bdata : [BoidData]
+  bdata2 : [BoidData]
+	alter : bool
   len   : int    -- Actual length
   moved : int
   steps : int
@@ -38,6 +40,7 @@ class Flock
     this.steps = steps;
     this.width = width;
     this.height = height;
+		this.alter = true;
     this.len    = 0;
     this.boids = new [Boid](size);
     this.bdata = new [BoidData](size)
@@ -54,16 +57,22 @@ class Flock
   def step(): void {
     if this.steps > 0 then {
       for b in this.boids {
-        b!move(this, this.bdata)
+        b!move(this, if this.alter then this.bdata else this.bdata2)
       };
       this.steps = this.steps - 1;
     }
   }
 
   def ack(bd: BoidData, i: int): void {
-    this.bdata[i] = bd;
+    if this.alter then {
+			this.bdata2[i] = bd;
+		}else{
+			this.bdata[i] = bd;
+		};
+		
     this.moved = this.moved + 1;
     if this.moved == |this.boids| then {
+			this.alter = not this.alter;
       this.moved = 0;
       this!step()
     }
