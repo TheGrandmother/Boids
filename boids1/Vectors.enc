@@ -35,26 +35,24 @@ passive class Vector2D
     sqrt(x * x + y * y);
   }
 
-  def normalize(): void {
+  def normalize(): Vector2D {
     let magn = this.magnitude();
-    this.x = this.x / magn;
-    this.y = this.y / magn;
+    new Vector2D(this.x / magn, this.y / magn)
   }
 
-  def div(r: real): void {
-    this.x = this.x / r;
-    this.y = this.y / r;
+  def div(r: real): Vector2D {
+    new Vector2D(this.x / r , this.y / r)
   }
 
-  def mul(r: real): void {
-    this.x = this.x * r;
-    this.y = this.y * r;
+  def mul(r: real): Vector2D {
+		new Vector2D(this.x * r, this.y * r)
   }
 
-  def limit(r : real) : void {
+  def limit(r : real) : Vector2D {
     let magn = this.magnitude();
     if (magn > r) then {
-      this.normalize();
-      this.mul(r)
-    }
+      this.normalize().mul(r);
+    }else{
+			new Vector2D(this.x,this.y)
+		}
   }
