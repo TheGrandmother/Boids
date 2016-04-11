@@ -84,6 +84,10 @@ class Boid {
     this.data = new BoidData(loc);
   }
 
+  def move(boids: [BoidData]): void {
+    ()
+  }
+
   def separation(boids: [BoidData]): void {
     let desiredseparation = 25.0;
     let steer = new Vector3D(0.0, 0.0, 0.0);
