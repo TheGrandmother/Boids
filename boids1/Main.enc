@@ -11,8 +11,8 @@ class Main {
 class Boid {
   id: int
   location: Coord
-  velocity: Vector
-  acceleration: Vector
+  velocity: Vector2D
+  acceleration: Vector3D
   r: real
   maxforce: real    -- Maximum steering force
   maxspeed: real    -- Maximum speed
@@ -31,11 +31,16 @@ class Boid {
 
   def separation(boids: [Boid]): void {
     let desiredseparation = 25.0;
+    let steer = new Vector3D(0.0, 0.0, 0.0);
+    let count = 0;
 
-    -- float desiredseparation = 25.0f;
-    -- PVector steer = new PVector(0, 0, 0);
-    -- int count = 0;
-    -- // For every boid in the system, check if it's too close
+    for boid in voids {
+      ()
+    }
+
+
+    -- For every boid in the system, check if it's too close
+
     -- for (Boid other : boids) {
     --   float d = PVector.dist(location, other.location);
     --   // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
@@ -78,17 +83,17 @@ passive class Vector2D
     this.y = y
   }
 
-  passive class Vector3D
-    x: real
-    y: real
-    z: real
+passive class Vector3D {
+  x: real
+  y: real
+  z: real
 
-    def init(x: real, y: real, z: real): void {
-      this.x = x;
-      this.y = y
-      this.z = z
-    }
-
+  def init(x: real, y: real, z: real): void {
+    this.x = x;
+    this.y = y;
+    this.z = z
+  }
+}
 
 passive class Coord
   x: int
