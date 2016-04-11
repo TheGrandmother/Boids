@@ -47,7 +47,15 @@ class Boid {
     -- For every boid in the system, check if it's too close
     for other in boids {
       let dist = this.data.location.distance(other.location);
-    --     ()
+        if (dist > 0) and (dist < desiredseparation) then {
+          let diff = this.data.location.sub(other.location);
+          diff.normalize();
+          diff.div(dist);
+          steer.add(diff);
+          count = count + 1;
+        }
     }
+    -- if (count > 0) then steer.div(count);
+
   }
 }
