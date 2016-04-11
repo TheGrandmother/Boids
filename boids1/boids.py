@@ -54,7 +54,7 @@ def lameDraw(((x,y),(vx,vy)),index):
 	(cx,cy) = (x*pos_scale + pos_offs,y*pos_scale + pos_offs)
 	(cvx,cvy) = normalize((vx,vy))
 	(cvx,cvy) = (cx+cvx*10,cy+cvy*10)
-	pygame.draw.line(
+	pygame.draw.aaline(
 	        screen, index, (cx,cy), 
 	        (cvx,cvy), 
 	        4)
@@ -66,7 +66,7 @@ def clearBoid((pos,vel)):
     (vx,vy) = vel
     c_vel = (cx + vx*vel_scale,cy + vy*vel_scale)
 
-    pygame.draw.line(
+    pygame.draw.aaline(
             screen, BLACK, c_pos, 
             c_vel, 
             1)
@@ -101,7 +101,9 @@ if __name__ == "__main__":
 							boids[index] = data
 							lameDraw(data,WHITE)
 							#drawBoid(data,WHITE)
-            
+        else:
+					print "lol"
+					quit()
         line = boid_file.readline()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -111,4 +113,4 @@ if __name__ == "__main__":
                 pygame.display.quit()
                 sys.exit(0)
         pygame.display.update() 
-        pygame.time.delay(10)
+        pygame.time.delay(1)

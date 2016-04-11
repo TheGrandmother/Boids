@@ -12,7 +12,7 @@ class Main {
 
     this.width = 500;
     this.height = 500;
-    let nBoids = 2;
+    let nBoids = 100;
     let nSteps = 1000;
 
     let flock = new Flock(nSteps, this.width, this.height, nBoids);
@@ -49,7 +49,7 @@ class Flock
 
   def createBoid(loc: Vector2D): void {
     let bd = new BoidData(loc);
-    let b = new Boid(this.len, bd, this.width, this.height);
+    let b = new Boid(this.len, this.width, this.height);
     this.boids[this.len] = b;
     this.bdata[this.len] = bd;
     this.len = this.len + 1
