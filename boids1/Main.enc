@@ -7,11 +7,12 @@ class Main {
 
   def main(args: [String]): void {
     setSeed(1);
-    print("Hi! {}\n", |args|);
-    print("RandomReal is {}\n", randomReal(0, 10));
-    print("RandomReal is {}\n", randomReal(0, 10));
-    print("RandomReal is {}\n", randomReal(0, 10));
-    print("RandomReal is {}\n", randomReal(0, 10));
+
+    let nBoids = 100;
+    repeat i <- nBoids {
+      let b = new Boid()
+
+
   }
 }
 
