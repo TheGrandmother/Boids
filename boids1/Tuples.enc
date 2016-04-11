@@ -1,0 +1,66 @@
+passive class Vector2D
+  x: real
+  y: real
+
+  def init(x: real, y: real): void {
+    this.x = x;
+    this.y = y
+  }
+
+  def distance(other: Vector2D): real {
+    0.0 -- TODO
+  }
+
+  def diff(other: Vector2D): real {
+    0.0
+  }
+
+  def sub(other: Vector2D): real {
+    0.0
+  }
+
+
+passive class Vector3D
+  x: real
+  y: real
+  z: real
+
+  def init(x: real, y: real, z: real): void {
+    this.x = x;
+    this.y = y;
+    this.z = z
+  }
+
+  def distance(other: Vector3D): real {
+    0.0
+  }
+
+  def diff(other: Vector3D): real {
+    0.0
+  }
+
+  def sub(other: Vector3D): real {
+    0.0
+  }
+
+passive class Coord
+  x: int
+  y: int
+
+  def init(x: int, y: int): void {
+    this.x = x;
+    this.y = y
+  }
+
+  def distance(other: Coord): real {
+    0.0
+  }
+
+  def diff(other: Coord): Vector2D {
+    null
+  }
+
+
+  def sub(other: Coord): real {
+    0.0
+  }
