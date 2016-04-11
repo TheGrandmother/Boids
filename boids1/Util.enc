@@ -19,8 +19,3 @@ def cos(x: real): real {
 def sin(x: real): real {
   embed real sin(#{x}); end
 }
-
-
-def random(x: real) : real {
-  5.789
-}
