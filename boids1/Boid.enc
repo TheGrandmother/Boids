@@ -65,9 +65,9 @@ class Boid {
     -- Reset accelertion to 0 each cycle
     sendable.acceleration = sendable.acceleration.mul(0);
 
-    let toSend = this.borders(sendable);
+    this.borders(sendable);
 
-    flock.ack(toSend, this.id);
+    flock.ack(sendable, this.id);
   }
 
   def separation(boids: [BoidData]): Vector2D {
@@ -146,9 +146,9 @@ class Boid {
     }
   }
 
-  def borders(sendable: Vector2D): Vector2D {
-    let x = sendable.x;
-    let y = sendable.y;
+  def borders(sendable: BoidData): void {
+    let x = sendable.location.x;
+    let y = sendable.location.y;
     if x < (0-this.data.r) then {
       x = this.width + this.data.r;
     } else if x > this.width + this.data.r then {
@@ -161,6 +161,6 @@ class Boid {
       y = 0-this.data.r;
     };
 
-    new Vector2D(x, y);
+    sendable.location = new Vector2D(x, y);
   }
 }
