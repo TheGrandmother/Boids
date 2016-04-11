@@ -8,17 +8,15 @@ class Main {
   }
 }
 
-class Boid {
-  id: int
+passive class BoidData {
   location: Coord
   velocity: Vector2D
   acceleration: Vector2D
   r: real
-  maxforce: real    -- Maximum steering force
-  maxspeed: real    -- Maximum speed
+  maxforce: real -- Maximum steering force
+  maxspeed: real -- Maximum speed
 
-  def init(id: int, loc: Coord): void {
-    this.id = id;
+  def init(loc: Coord): void {
     this.location = loc;
     this.acceleration = new Vector2D(0.0, 0.0);
 
@@ -28,8 +26,19 @@ class Boid {
     this.maxspeed = 2.0;
     this.maxforce = 0.03;
   }
+}
 
-  def separation(boids: [Boid]): void {
+
+class Boid {
+  id: int
+  data: BoidData
+
+  def init(id: int, loc: Coord): void {
+    this.id = id;
+    this.data = new BoidData(loc);
+  }
+
+  def separation(boids: [BoidData]): void {
     let desiredseparation = 25.0;
     let steer = new Vector3D(0.0, 0.0, 0.0);
     let count = 0;
@@ -83,6 +92,7 @@ class Boid {
     -- }
     -- return steer
   }
+
 }
 
 passive class Vector2D
