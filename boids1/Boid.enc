@@ -1,16 +1,16 @@
 passive class BoidData {
-  location: Vector2D
-  velocity: Vector2D
-  acceleration: Vector2D
+  location: Vector
+  velocity: Vector
+  acceleration: Vector
   r: real
   maxforce: real -- Maximum steering force
   maxspeed: real -- Maximum speed
 
-  def init(loc: Vector2D): void {
+  def init(loc: Vector): void {
     this.location = loc;
-    this.acceleration = new Vector2D(0.0, 0.0);
+    this.acceleration = new Vector(0.0, 0.0);
     let angle = randomReal(0, 6.28);
-    this.velocity = new Vector2D(cos(angle)*1, sin(angle)*1);
+    this.velocity = new Vector(cos(angle)*1, sin(angle)*1);
     this.r = 2.0;
     this.maxspeed = 2.0;
     this.maxforce = 0.03;
@@ -77,9 +77,9 @@ class Boid {
     flock!ack(sendable, this.id);
   }
 
-  def separation(boids: [BoidData]): Vector2D {
+  def separation(boids: [BoidData]): Vector {
     let desiredSeparation = 25.0;
-    let steer = new Vector2D(0.0, 0.0);
+    let steer = new Vector(0.0, 0.0);
     let count = 0;
 
     -- For every boid in the system, check if it's too close
@@ -104,40 +104,40 @@ class Boid {
     }
   }
 
-  def seek(boids: [BoidData], target: Vector2D): Vector2D{
+  def seek(boids: [BoidData], target: Vector): Vector{
     let desired = target.sub((boids[this.id]).location);
     let normalizedDesired = desired.normalize().mul((boids[this.id]).maxspeed);
     normalizedDesired.sub((boids[this.id]).velocity).limit((boids[this.id]).maxforce);
   }
   -- Alignment
   -- For every nearby boid in the system, calculate the average velocity
-  def align (boids: [BoidData]) : Vector2D {
-    let neighbordist = 100;
-    let sum = new Vector2D(0.0, 0.0);
+  def align (boids: [BoidData]) : Vector {
+    let neighbordist = 50;
+    let sum = new Vector(0.0, 0.0);
     let count = 0;
     for other in boids {
-      let d = sum.distance(other.location);
+      let d = (boids[this.id]).location.distance(other.location);
       if (d > 0) and (d < neighbordist) then {
         sum = sum.add(other.velocity);
         count = count + 1;
       }
     };
     if (count > 0) then {
-      sum.div(count*1.0).
+      sum.div(count).
         normalize().
         mul((boids[this.id]).maxspeed).
         sub((boids[this.id]).velocity).
         limit((boids[this.id]).maxforce);
     }
     else {
-      new Vector2D(0.0, 0.0);
+      new Vector(0.0, 0.0);
     }
   }
 
-  def cohesion(boids: [BoidData]) : Vector2D {
+  def cohesion(boids: [BoidData]) : Vector {
     let neighborDistance = 50.0;
     let location = (boids[this.id]).location;
-    let sum = new Vector2D(0.0, 0.0);
+    let sum = new Vector(0.0, 0.0);
     let count = 0;
     for other in boids {
       let d = location.distance(other.location);
@@ -149,7 +149,7 @@ class Boid {
     if (count > 0) then {
       this.seek(boids,sum.div(count));
     } else {
-      new Vector2D(0, 0);
+      new Vector(0, 0);
     }
   }
 
@@ -168,6 +168,6 @@ class Boid {
       y = 0-(boids[this.id]).r;
     };
 
-    sendable.location = new Vector2D(x, y);
+    sendable.location = new Vector(x, y);
   }
 }

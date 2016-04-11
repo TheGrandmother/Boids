@@ -1,4 +1,4 @@
-bundle Vector2D where
+bundle Vector where
 
 import Util
 
@@ -6,7 +6,7 @@ embed
 #include <math.h>
 end
 
-passive class Vector2D
+passive class Vector
   x: real
   y: real
 
@@ -15,22 +15,22 @@ passive class Vector2D
     this.y = y
   }
 
-  def clone(): Vector2D {
-    new Vector2D(this.x, this.y)
+  def clone(): Vector {
+    new Vector(this.x, this.y)
   }
 
-  def distance(other: Vector2D): real {
+  def distance(other: Vector): real {
     let x_diff = this.x - other.x;
     let y_diff = this.y - other.y;
     sqrt(x_diff * x_diff + y_diff * y_diff);
   }
 
-  def sub(other: Vector2D): Vector2D {
-    new Vector2D(this.x - other.x, this.y - other.y)
+  def sub(other: Vector): Vector {
+    new Vector(this.x - other.x, this.y - other.y)
   }
 
-  def add(other: Vector2D): Vector2D {
-    new Vector2D(other.x + this.x, other.y + this.y)
+  def add(other: Vector): Vector {
+    new Vector(other.x + this.x, other.y + this.y)
   }
 
   def magnitude() : real {
@@ -39,24 +39,28 @@ passive class Vector2D
     sqrt(x * x + y * y);
   }
 
-  def normalize(): Vector2D {
+  def normalize(): Vector {
     let magn = this.magnitude();
-    new Vector2D(this.x / magn, this.y / magn)
+    new Vector(this.x / magn, this.y / magn)
   }
 
-  def div(r: real): Vector2D {
-    new Vector2D(this.x / r , this.y / r)
+  def div(r: real): Vector {
+    new Vector(this.x / r , this.y / r)
   }
 
-  def mul(r: real): Vector2D {
-    new Vector2D(this.x * r, this.y * r)
+  def mul(r: real): Vector {
+    new Vector(this.x * r, this.y * r)
   }
 
-  def limit(r : real) : Vector2D {
+  def limit(r : real) : Vector {
     let magn = this.magnitude();
     if (magn > r) then {
       this.normalize().mul(r);
     } else{
-      new Vector2D(this.x,this.y)
+      new Vector(this.x,this.y)
     }
+  }
+
+  def show(): void {
+    print("({}, {})\n", this.x, this.y);
   }
