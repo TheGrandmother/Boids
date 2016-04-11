@@ -42,8 +42,8 @@ passive class Vector3D
     0.0
   }
 
-  def sub(other: Vector3D): Vector3D {
-    null
+  def sub(other: Vector3D): void {
+    ()
   }
 
   def add(v2d: Coord): void {
@@ -52,11 +52,12 @@ passive class Vector3D
 
   def div(r: real): void {()}
 
-  def mag(): int {()}
+  def mag(): int {2}
 
   def normalize(): void {()}
 
   def mult(r: real): void {()}
+
 
 passive class Coord
   x: int
