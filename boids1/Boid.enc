@@ -9,8 +9,8 @@ passive class BoidData {
   def init(loc: Vector): void {
     this.location = loc;
     this.acceleration = new Vector(0.0, 0.0);
-    let angle = randomReal(0, 6.28);
-    this.velocity = new Vector(cos(angle)*1, sin(angle)*1);
+    let angle = randomReal(0, 3.14 * 2);
+    this.velocity = new Vector(cos(angle), sin(angle));
     this.r = 2.0;
     this.maxspeed = 2.0;
     this.maxforce = 0.03;
