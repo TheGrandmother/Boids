@@ -1,0 +1,49 @@
+import Random
+import Util
+
+class Main {
+
+  def main(args: [String]): void {
+    print ("Hi! {}", |args|)
+  }
+}
+
+class Boid {
+  id: int
+  location: Coord
+  velocity: Vector
+  acceleration: Vector
+  r: real
+  maxforce: real    -- Maximum steering force
+  maxspeed: real    -- Maximum speed
+
+  def init(id: int, loc: Coord): void {
+    this.id = id;
+    this.location = loc;
+    this.acceleration = new Vector(0.0, 0.0);
+
+    let angle = random(6.28) ; -- ?
+    this.velocity = new Vector(cos(angle), sin(angle));
+    this.r = 2.0;
+    this.maxspeed = 2.0;
+    this.maxforce = 0.03;
+  }
+}
+
+passive class Vector
+  x: real
+  y: real
+
+  def init(x: real, y: real): void {
+    this.x = x;
+    this.y = y
+  }
+
+passive class Coord
+  x: int
+  y: int
+
+  def init(x: int, y: int): void {
+    this.x = x;
+    this.y = y
+  }

@@ -1,0 +1,16 @@
+
+
+def cos(x: real): real {
+  1.0
+}
+
+
+
+def sin(x: real): real {
+  1.0
+}
+
+
+def random(x: real) : real {
+  5.789
+}
