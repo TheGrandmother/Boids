@@ -98,9 +98,9 @@ if __name__ == "__main__":
 							if index in boids:
 									#drawBoid(boids[index],BLACK)
 									lameDraw(boids[index],BLACK)
-							#boids[index] = data
+							boids[index] = data
 							lameDraw(data,WHITE)
-							drawBoid(data,WHITE)
+							#drawBoid(data,WHITE)
             
         line = boid_file.readline()
         for event in pygame.event.get():
