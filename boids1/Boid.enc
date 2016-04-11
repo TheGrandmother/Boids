@@ -146,7 +146,7 @@ class Boid {
     }
   }
 
-  def borders(sendable: Vector2D): void {
+  def borders(sendable: Vector2D): Vector2D {
     let x = sendable.x;
     let y = sendable.y;
     if x < (0-this.data.r) then {
