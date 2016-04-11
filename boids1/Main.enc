@@ -114,22 +114,20 @@ class Boid {
       steer.normalize();
       steer.mul(this.data.maxspeed);
       steer.sub(this.data.velocity);
-      steer.limit(this.data.maxforce);
-      ()
+      steer.limit(this.data.maxforce)
     };
     steer
   }
 
-def seek(target: Vector2D): Vector2D{  
+def seek(target: Vector2D): Vector2D{
      let desired = target.sub(this.data.location);
      desired.normalize();
      desired.mul(this.data.maxspeed);
- 
+
      let steer = desired.sub(this.data.velocity);
      steer.limit(this.data.maxforce);
-  
+
      steer;
-  
    }
 
   -- Alignment
@@ -158,10 +156,30 @@ def seek(target: Vector2D): Vector2D{
         let steer = sum.sub(this.data.velocity);
         steer.limit(this.data.maxforce);
         steer
-      } 
+      }
       else {
         new Vector2D(0.0, 0.0);
       }
     }
-  }  
+  }
+
+  def cohesion(boids: [BoidData]) : Vector2D {
+    let neighborDistance = 50.0;
+    let location = this.data.location;
+    let sum = new Vector2D(0.0, 0.0);
+    let count = 0;
+    for other in boids {
+      let d = location.distance(other.location);
+      if (d > 0) and (d < neighborDistance) then {
+        sum.add(other.location);
+        count = count + 1;
+      }
+    };
+    if (count > 0) then {
+      sum.div(count);
+      this.seek(sum);
+    } else {
+      new Vector2D(0, 0);
+    }
+  }
 }
