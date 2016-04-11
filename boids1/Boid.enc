@@ -17,14 +17,13 @@ passive class BoidData {
   }
 
   def clone(): BoidData {
-    let res = new BoidData(this.location.clone()) in {
-      res.velocity = this.velocity.clone();
-      res.acceleration = this.acceleration.clone();
-      res.r = this.r;
-      res.maxforce = this.maxforce;
-      res.maxspeed = this.maxspeed;
-      res
-    }
+    let res = new BoidData(this.location.clone());
+    res.velocity = this.velocity.clone();
+    res.acceleration = this.acceleration.clone();
+    res.r = this.r;
+    res.maxforce = this.maxforce;
+    res.maxspeed = this.maxspeed;
+    res
   }
 
   def show(id: int) : void {
@@ -49,7 +48,6 @@ class Boid {
   }
 
   def move(flock : Flock, boids: [BoidData]): void {
-    print ("{} moving\n", this.id);
     -- the BoidData for the result
     let sendable = this.data.clone();
     -- calculation
@@ -77,7 +75,7 @@ class Boid {
 
     sendable.show(this.id);
 
-    flock.ack(sendable, this.id);
+    flock!ack(sendable, this.id);
   }
 
   def separation(boids: [BoidData]): Vector2D {
