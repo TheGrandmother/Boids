@@ -13,7 +13,7 @@ class Main {
     this.width = 500;
     this.height = 500;
     let nBoids = 100;
-    let nSteps = 100;
+    let nSteps = 1000;
 
     let flock = new Flock(nSteps, this.width, this.height, nBoids);
     repeat i <- nBoids {
