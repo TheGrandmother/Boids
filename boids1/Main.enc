@@ -25,60 +25,17 @@ passive class BoidData {
   def init(loc: Coord): void {
     this.location = loc;
     this.acceleration = new Vector2D(0.0, 0.0);
-
-    let angle = random(6.28) ; -- ?
+    let angle = random(6.28);
     this.velocity = new Vector2D(cos(angle), sin(angle));
     this.r = 2.0;
     this.maxspeed = 2.0;
     this.maxforce = 0.03;
   }
 
-  def separation(boids: [Boid]): void {
-    let desiredseparation = 25.0;
-    let steer = new Vector3D(0.0, 0.0, 0.0);
-    let count = 0;
-
-    -- for boid in voids {
-    --   ()
-    -- }
-
-
-    -- For every boid in the system, check if it's too close
-
-    -- for (Boid other : boids) {
-    --   float d = PVector.dist(location, other.location);
-    --   // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-    --   if ((d > 0) && (d < desiredseparation)) {
-    --     // Calculate vector pointing away from neighbor
-    --     PVector diff = PVector.sub(location, other.location);
-    --     diff.normalize();
-    --     diff.div(d);        // Weight by distance
-    --     steer.add(diff);
-    --     count++;            // Keep track of how many
-    --   }
-    -- }
-    -- // Average -- divide by how many
-    -- if (count > 0) {
-    --   steer.div((float)count);
-    -- }
-    --
-    -- // As long as the vector is greater than 0
-    -- if (steer.mag() > 0) {
-    --   // First two lines of code below could be condensed with new PVector setMag() method
-    --   // Not using this method until Processing.js catches up
-    --   // steer.setMag(maxspeed);
-    --
-    --   // Implement Reynolds: Steering = Desired - Velocity
-    --   steer.normalize();
-    --   steer.mult(maxspeed);
-    --   steer.sub(velocity);
-    --   steer.limit(maxforce);
-    -- }
-    -- return steer
+  def clone(): BoidData {
+    null -- TODO
   }
-
 }
-
 
 class Boid {
   id: int
@@ -89,26 +46,32 @@ class Boid {
     this.data = new BoidData(loc);
   }
 
+  def applyForce(PVector force): void {
+    -- We could add mass here if we want A = F / M
+    acceleration.add(force);
+  }
+
   def move(boids: [BoidData]): void {
-    -- PVector sep = separate(boids);   // Separation
-    --     PVector ali = align(boids);      // Alignment
-    --     PVector coh = cohesion(boids);   // Cohesion
-    --     // Arbitrarily weight these forces
-    --     sep.mult(1.5);
-    --     ali.mult(1.0);
-    --     coh.mult(1.0);
-    --     // Add the force vectors to acceleration
-    --     applyForce(sep);
-    --     applyForce(ali);
-    --     applyForce(coh);
-        --
-        -- // Update velocity
-        --     velocity.add(acceleration);
-        --     // Limit speed
-        --     velocity.limit(maxspeed);
-        --     location.add(velocity);
-        --     // Reset accelertion to 0 each cycle
-        --     acceleration.mult(0);
+    let sep = this.separation(boids);
+    let ali = this.align(boids);
+    let coh = this.cohesion(boids);
+
+    -- Arbitrarily weight these forces
+    sep.mul(1.5);
+    ali.mul(1.0);
+    coh.mul(1.0);
+    -- Add the force vectors to acceleration
+    -- applyForce(sep);
+    -- applyForce(ali);
+    -- applyForce(coh);
+    -- -- Update velocity
+
+    --     velocity.add(acceleration);
+    --     // Limit speed
+    --     velocity.limit(maxspeed);
+    --     location.add(velocity);
+    --     // Reset accelertion to 0 each cycle
+    --     acceleration.mult(0);
 
     ()
   }
@@ -174,10 +137,10 @@ class Boid {
         let steer = sum.sub(this.data.velocity);
         steer.limit(this.data.maxforce);
         steer
-      } 
+      }
       else {
         new Vector2D(0.0, 0.0);
       }
     }
-  }  
+  }
 }
