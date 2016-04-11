@@ -32,6 +32,7 @@ class Flock
   width : int
   height: int
 
+
   def init(steps: int, width: int, height: int, size: int) : void {
     this.moved = 0;
     this.steps = steps;
@@ -51,10 +52,12 @@ class Flock
   }
 
   def step(): void {
-    if this.steps == 0 then {
+    if this.steps > 0 then {
+      print ("Step no. {}\n", this.steps);
       for b in this.boids {
         b!move(this, this.bdata)
       };
+      this.steps = this.steps - 1;
     }
   }
 

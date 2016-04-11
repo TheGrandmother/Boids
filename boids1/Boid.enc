@@ -26,6 +26,13 @@ passive class BoidData {
       res
     }
   }
+
+  def show(id: int) : void {
+    print("{},{},{},{},{}\n",
+          id,
+          this.location.x, this.location.y,
+          this.velocity.x, this.velocity.y)
+  }
 }
 
 class Boid {
@@ -42,6 +49,7 @@ class Boid {
   }
 
   def move(flock : Flock, boids: [BoidData]): void {
+    print ("{} moving\n", this.id);
     -- the BoidData for the result
     let sendable = this.data.clone();
     -- calculation
@@ -66,6 +74,8 @@ class Boid {
     sendable.acceleration = sendable.acceleration.mul(0);
 
     this.borders(sendable);
+
+    sendable.show(this.id);
 
     flock.ack(sendable, this.id);
   }
