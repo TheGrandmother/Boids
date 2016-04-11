@@ -1,5 +1,5 @@
 import Random
-import Util
+-- import Util -- commented to avoid duplicate inclusion
 import Vectors
 
 class Main {
