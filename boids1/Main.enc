@@ -1,6 +1,6 @@
 import Random
 import Util
-import Tuples
+import Vectors
 
 class Main {
 
@@ -15,14 +15,14 @@ class Main {
 }
 
 passive class BoidData {
-  location: Coord
+  location: Vector2D
   velocity: Vector2D
   acceleration: Vector2D
   r: real
   maxforce: real -- Maximum steering force
   maxspeed: real -- Maximum speed
 
-  def init(loc: Coord): void {
+  def init(loc: Vector2D): void {
     this.location = loc;
     this.acceleration = new Vector2D(0.0, 0.0);
 
@@ -35,7 +35,7 @@ passive class BoidData {
 
   def separation(boids: [Boid]): void {
     let desiredseparation = 25.0;
-    let steer = new Vector3D(0.0, 0.0, 0.0);
+    let steer = new Vector2D( 0.0, 0.0);
     let count = 0;
 
     -- for boid in voids {
@@ -84,7 +84,7 @@ class Boid {
   id: int
   data: BoidData
 
-  def init(id: int, loc: Coord): void {
+  def init(id: int, loc: Vector2D): void {
     this.id = id;
     this.data = new BoidData(loc);
   }
@@ -95,7 +95,7 @@ class Boid {
 
   def separation(boids: [BoidData]): void {
     let desiredseparation = 25.0;
-    let steer = new Vector3D(0.0, 0.0, 0.0);
+    let steer = new Vector2D(0.0, 0.0);
     let count = 0;
 
     -- For every boid in the system, check if it's too close
@@ -110,15 +110,27 @@ class Boid {
         }
     };
     if (count > 0) then steer.div(count);
-    if steer.mag() > 0 then {
+    if steer.magnitude() > 0 then {
       steer.normalize();
-      steer.mult(this.data.maxspeed);
+      steer.mul(this.data.maxspeed);
       steer.sub(this.data.velocity);
       steer.limit(this.data.maxforce);
       ()
     };
     steer
   }
+
+def seek(target: Vector2D): Vector2D{  
+     let desired = target.sub(this.data.location);
+     desired.normalize();
+     desired.mul(this.data.maxspeed);
+ 
+     let steer = desired.sub(this.data.velocity);
+     steer.limit(this.data.maxforce);
+  
+     steer;
+  
+   }
 
   -- Alignment
   -- For every nearby boid in the system, calculate the average velocity
@@ -127,7 +139,7 @@ class Boid {
     let sum = new Vector2D(0.0, 0.0);
     let count = 0;
     for other in boids {
-      let d = sum.dist(other.location);
+      let d = sum.distance(other.location);
       if ((d > 0) and (d < neighbordist)) then {
         sum.add(other.velocity);
         count = count + 1;
@@ -141,7 +153,7 @@ class Boid {
 
         --// Implement Reynolds: Steering = Desired - Velocity
         sum.normalize();
-        sum.mult(this.data.maxspeed);
+        sum.mul(this.data.maxspeed);
 
         let steer = sum.sub(this.data.velocity);
         steer.limit(this.data.maxforce);
