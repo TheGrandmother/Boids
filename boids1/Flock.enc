@@ -1,0 +1,27 @@
+passive class Flock
+  boids : [Boid] -- Use static array as a size
+  cap   : int    -- Capacity
+  len   : int    -- Actual length
+
+  def init() : void {
+    this.cap = 10;
+    this.len = 0;
+    this.boids = new [Boid](this.cap)
+  }
+
+  def add(boid: Boid): void {
+    if (this.len >= this.cap) then
+      let newBoid = new [Boid](this.cap + 10) in {
+        repeat i <- this.len
+          newBoid[i] = this.boids;
+        this.boid = newBoid;
+        this.cap  = cap + 10
+        -- this.len unchanged
+      };
+    this.boids[this.len] = boid;
+    this.len = this.len + 1
+  }
+
+  def size(): int {
+    this.len
+  }
