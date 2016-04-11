@@ -1,4 +1,4 @@
-passive class Flock
+class Flock
   boids : [Boid] -- Use static array as a size
   cap   : int    -- Capacity
   len   : int    -- Actual length
