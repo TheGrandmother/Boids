@@ -85,8 +85,36 @@ class Boid {
   }
 
   def move(boids: [BoidData]): void {
+    -- PVector sep = separate(boids);   // Separation
+    --     PVector ali = align(boids);      // Alignment
+    --     PVector coh = cohesion(boids);   // Cohesion
+    --     // Arbitrarily weight these forces
+    --     sep.mult(1.5);
+    --     ali.mult(1.0);
+    --     coh.mult(1.0);
+    --     // Add the force vectors to acceleration
+    --     applyForce(sep);
+    --     applyForce(ali);
+    --     applyForce(coh);
+        --
+        -- // Update velocity
+        --     velocity.add(acceleration);
+        --     // Limit speed
+        --     velocity.limit(maxspeed);
+        --     location.add(velocity);
+        --     // Reset accelertion to 0 each cycle
+        --     acceleration.mult(0);
+
     ()
   }
+
+  -- void run(ArrayList<Boid> boids) {
+  --     flock(boids);
+  --     update();
+  --     borders();
+  --     render();
+  --   }
+
 
   def separation(boids: [BoidData]): void {
     let desiredseparation = 25.0;
