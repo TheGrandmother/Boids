@@ -4,15 +4,22 @@ import Vectors
 import Boid
 
 class Main {
+  width: int
+  height: int
 
   def main(args: [String]): void {
     setSeed(1);
 
-    -- let nBoids = 100;
-    -- repeat i <- nBoids {
-    --   -- let b = new Boid()
-    -- }
+    this.width = 500;
+    this.height = 500;
+    let nBoids = 100;
+    let nSteps = 100;
 
+    let flock = new Flock(nSteps);
+    repeat i <- nBoids {
+      flock.createBoid(new Vector2D(this.width/2, this.height/2))
+    };
+    flock!step()
   }
 }
 
@@ -22,11 +29,13 @@ class Flock
   cap   : int    -- Capacity
   len   : int    -- Actual length
   moved : int
+  steps : int
 
-  def init() : void {
+  def init(steps: int) : void {
     this.cap = 1000;
     this.len = 0;
     this.moved = 0;
+    this.steps = steps;
     this.boids = new [Boid](this.cap);
     this.bdata = new [BoidData](this.cap)
   }
@@ -58,8 +67,10 @@ class Flock
   }
 
   def step(): void {
-    for b in this.boids {
-      b!move(this.bdata)
+    if this.steps == 0 then {
+      for b in this.boids {
+        b!move(this.bdata)
+      };
     }
   }
 

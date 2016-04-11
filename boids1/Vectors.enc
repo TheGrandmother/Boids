@@ -15,6 +15,13 @@ passive class Vector2D
     this.y = y
   }
 
+  def clone(): Vector2D {
+    let
+      res = new Vector2D(this.x, this.y)
+    in
+      res
+  }
+
   def distance(other: Vector2D): real {
     let x_diff = this.x - other.x;
     let y_diff = this.y - other.y;
