@@ -27,3 +27,20 @@ class Flock
   def size(): int {
     this.len
   }
+
+  def step(): void {
+    let bdata = new [BoidData](this.size()) in {
+      repeat i <- this.size()
+        bdata[i] = (this.boids[i]).data
+    };
+    for b in this.boids {
+      b!move(bdata)
+    }
+  }
+
+  def ack(b: Boid, i: int): void {
+    boids[i] = b;
+    moved = moved + 1;
+    if moved == this.size() then
+      this.step()
+  }
