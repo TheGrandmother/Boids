@@ -21,7 +21,7 @@ class Flock
   len   : int    -- Actual length
 
   def init() : void {
-    this.cap = 10;
+    this.cap = 1000;
     this.len = 0;
     this.boids = new [Boid](this.cap)
   }
