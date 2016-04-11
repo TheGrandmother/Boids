@@ -103,9 +103,9 @@ class Boid {
     if (count > 0) then steer.div(count);
     if steer.mag() > 0 then {
       steer.normalize();
-      -- steer.mult(this.data.maxspeed);
-      -- steer.sub(this.data.velocity);
-      -- steer.limit(this.data.maxforce);
+      steer.mult(this.data.maxspeed);
+      steer.sub(this.data.velocity);
+      steer.limit(this.data.maxforce);
       ()
     };
     steer

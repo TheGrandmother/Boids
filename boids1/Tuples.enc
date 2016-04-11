@@ -42,7 +42,7 @@ passive class Vector3D
     0.0
   }
 
-  def sub(other: Vector3D): void {
+  def sub(other: Vector2D): void {
     ()
   }
 
@@ -57,6 +57,8 @@ passive class Vector3D
   def normalize(): void {()}
 
   def mult(r: real): void {()}
+
+  def limit(r: real): void {()}
 
 
 passive class Coord
