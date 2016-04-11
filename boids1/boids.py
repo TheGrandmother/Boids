@@ -52,7 +52,7 @@ def buidBoid(line):
 
 if __name__ == "__main__":
     boids = {}
-    size = width, height = 200, 200
+    size = width, height = 500, 500
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("pygame.draw functions ~ examples")
     pygame.init()
@@ -76,4 +76,4 @@ if __name__ == "__main__":
                 pygame.display.quit()
                 sys.exit(0)
         pygame.display.update() 
-        pygame.time.delay(50)
+        pygame.time.delay(20)
