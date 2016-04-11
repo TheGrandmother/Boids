@@ -16,9 +16,7 @@ class Main {
     let nSteps = 1000;
 
     let flock = new Flock(nSteps, this.width, this.height, nBoids);
-    repeat i <- nBoids {
-      flock.createBoid(new Vector(this.width/2, this.height/2))
-    };
+    flock.createBoids();
     flock!step()
   }
 }
@@ -28,7 +26,6 @@ class Flock
   bdata : [BoidData]
   bdata2 : [BoidData]
   alter : bool
-  len   : int    -- Actual length
   moved : int
   steps : int
   width : int
@@ -41,18 +38,19 @@ class Flock
     this.width = width;
     this.height = height;
     this.alter = true;
-    this.len    = 0;
     this.boids = new [Boid](size);
     this.bdata = new [BoidData](size);
     this.bdata2 = new [BoidData](size)
   }
 
-  def createBoid(loc: Vector): void {
-    let bd = new BoidData(loc);
-    let b = new Boid(this.len, this.width, this.height);
-    this.boids[this.len] = b;
-    this.bdata[this.len] = bd;
-    this.len = this.len + 1
+  def createBoids(): void {
+    let len = |this.boids|;
+    repeat i <- len {
+      let bd = new BoidData(new Vector(this.width/2, this.height/2));
+      let b = new Boid(i, this.width, this.height);
+      this.boids[i] = b;
+      this.bdata[i] = bd;
+    };
   }
 
   def step(): void {
