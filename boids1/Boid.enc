@@ -36,20 +36,20 @@ passive class BoidData {
 
 class Boid {
   id: int
-  --data: BoidData
+  data: BoidData
   width: int
   height: int
 
-  def init(id: int,  width: int, height: int): void {
+  def init(id: int, width: int, height: int): void {
     this.id = id;
-    --this.data = bd;
     this.width = width;
     this.height = height;
   }
 
   def move(flock : Flock, boids: [BoidData]): void {
+    this.data = boids[this.id];
     -- the BoidData for the result
-    let sendable = (boids[this.id]).clone();
+    let sendable = this.data.clone();
     -- calculation
     let sep = this.separation(boids);
     let ali = this.align(boids);
@@ -84,9 +84,9 @@ class Boid {
 
     -- For every boid in the system, check if it's too close
     for other in boids {
-      let dist = (boids[this.id]).location.distance(other.location);
+      let dist = this.data.location.distance(other.location);
       if (dist > 0) and (dist < desiredSeparation) then {
-        let diff = (boids[this.id]).location.sub(other.location);
+        let diff = this.data.location.sub(other.location);
         let normalizedDiff = diff.normalize().div(dist);
         steer = steer.add(normalizedDiff);
         count = count + 1
@@ -96,18 +96,18 @@ class Boid {
       steer = steer.div(count);
     if steer.magnitude() > 0 then {
       steer.normalize().
-        mul((boids[this.id]).maxspeed).
-        sub((boids[this.id]).velocity).
-        limit((boids[this.id]).maxforce)
+        mul(this.data.maxspeed).
+        sub(this.data.velocity).
+        limit(this.data.maxforce)
     } else {
       steer
     }
   }
 
   def seek(boids: [BoidData], target: Vector): Vector{
-    let desired = target.sub((boids[this.id]).location);
-    let normalizedDesired = desired.normalize().mul((boids[this.id]).maxspeed);
-    normalizedDesired.sub((boids[this.id]).velocity).limit((boids[this.id]).maxforce);
+    let desired = target.sub(this.data.location);
+    let normalizedDesired = desired.normalize().mul(this.data.maxspeed);
+    normalizedDesired.sub(this.data.velocity).limit(this.data.maxforce);
   }
   -- Alignment
   -- For every nearby boid in the system, calculate the average velocity
@@ -116,7 +116,7 @@ class Boid {
     let sum = new Vector(0.0, 0.0);
     let count = 0;
     for other in boids {
-      let d = (boids[this.id]).location.distance(other.location);
+      let d = this.data.location.distance(other.location);
       if (d > 0) and (d < neighbordist) then {
         sum = sum.add(other.velocity);
         count = count + 1;
@@ -125,9 +125,9 @@ class Boid {
     if (count > 0) then {
       sum.div(count).
         normalize().
-        mul((boids[this.id]).maxspeed).
-        sub((boids[this.id]).velocity).
-        limit((boids[this.id]).maxforce);
+        mul(this.data.maxspeed).
+        sub(this.data.velocity).
+        limit(this.data.maxforce);
     }
     else {
       new Vector(0.0, 0.0);
@@ -136,7 +136,7 @@ class Boid {
 
   def cohesion(boids: [BoidData]) : Vector {
     let neighborDistance = 50.0;
-    let location = (boids[this.id]).location;
+    let location = this.data.location;
     let sum = new Vector(0.0, 0.0);
     let count = 0;
     for other in boids {
@@ -156,16 +156,16 @@ class Boid {
   def borders(boids: [BoidData], sendable: BoidData): void {
     let x = sendable.location.x;
     let y = sendable.location.y;
-    if x < (0-(boids[this.id]).r) then {
-      x = this.width + (boids[this.id]).r;
-    } else if x > this.width + (boids[this.id]).r then {
-      x = 0-(boids[this.id]).r;
+    if x < (0-this.data.r) then {
+      x = this.width + this.data.r;
+    } else if x > this.width + this.data.r then {
+      x = 0-this.data.r;
     };
 
-    if y < (0-(boids[this.id]).r) then {
-      y = this.height + (boids[this.id]).r;
-    } else if y > (this.height+(boids[this.id]).r) then {
-      y = 0-(boids[this.id]).r;
+    if y < (0-this.data.r) then {
+      y = this.height + this.data.r;
+    } else if y > (this.height+this.data.r) then {
+      y = 0-this.data.r;
     };
 
     sendable.location = new Vector(x, y);
