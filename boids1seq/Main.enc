@@ -69,7 +69,7 @@ class Flock
   def step(): void {
     if this.steps > 0 then {
       for b in this.boids {
-        b!move(this, if this.alter
+        b.move(this, if this.alter
                      then this.bdata
                      else this.bdata2)
       };

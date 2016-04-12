@@ -34,7 +34,7 @@ passive class BoidData {
   }
 }
 
-class Boid {
+passive class Boid {
   id: int
   data: BoidData
   width: int

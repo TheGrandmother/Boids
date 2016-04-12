@@ -1,0 +1,108 @@
+embed
+#include <stdlib.h>
+#include <sys/time.h>
+double rand_valc(int seed);
+body
+// copied from http://www.csee.usf.edu/~christen/tools/genunifc.c
+//===========================================================================
+//=  Function to generate uniformly distributed random variables            =
+//=    - Input:  Min and max values                                         =
+//=    - Output: Returns with uniformly distributed random variable         =
+//===========================================================================
+double unifc(double min, double max)
+{
+  double z;                     // Uniform random number (0 < z < 1)
+  double unif_value;            // Computed uniform value to be returned
+
+  // Pull a uniform random value (0 < z < 1)
+  z = rand_valc(0);
+
+  // Compute uniform continuous random variable using inversion method
+  unif_value = z * (max - min) + min;
+
+  return(unif_value);
+}
+
+// copied from http://www.csee.usf.edu/~christen/tools/genunifc.c
+//=========================================================================
+//= Multiplicative LCG for generating uniform(0.0, 1.0) random numbers    =
+//=   - From R. Jain, "The Art of Computer Systems Performance Analysis," =
+//=     John Wiley & Sons, 1991. (Page 443, Figure 26.2)                  =
+//=========================================================================
+double rand_valc(int seed)
+{
+  const long  a =      16807;  // Multiplier
+  const long  m = 2147483647;  // Modulus
+  const long  q =     127773;  // m div a
+  const long  r =       2836;  // m mod a
+  static long x;               // Random int value
+  long        x_div_q;         // x divided by q
+  long        x_mod_q;         // x modulo q
+  long        x_new;           // New x value
+
+  // Set the seed if argument is non-zero and then return zero
+  if (seed > 0)
+  {
+    x = seed;
+    return(0.0);
+  }
+
+  // RNG using integer arithmetic
+  x_div_q = x / q;
+  x_mod_q = x % q;
+  x_new = (a * x_mod_q) - (r * x_div_q);
+  if (x_new > 0)
+    x = x_new;
+  else
+    x = x_new + m;
+
+  // Return a random value between 0.0 and 1.0
+  return((double) x / m);
+}
+end
+
+def getUTime() : int{
+  embed int
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    tv.tv_sec*(uint64_t)1000000+tv.tv_usec;
+  end
+}
+
+def getMTime() : int {
+  getUTime()/1000
+}
+
+def setSeed(seed: int) : void {
+  if seed == 0 then {
+    print("Seed can't be zero");
+    exit(-1);
+  } else {
+    embed real rand_valc(#{seed}); end;
+    randomSeed(seed);
+  }
+}
+
+def randomSeed(seed : int) : void {
+  embed void time_t t;srand((unsigned) #{seed}); end
+}
+
+def randomSeedTimer() : void{
+  embed void time_t t;srand((unsigned) time(&t)); end
+}
+
+def randomInt(from : int , to : int) : int {
+  embed int (#{from} + (rand() % (#{to} - #{from} + 1))); end
+}
+
+def randomReal(from : real , to : real) : real {
+  embed real unifc(#{from}, #{to}); end
+}
+
+def randomBool() : bool {
+  if randomInt(0,1) == 0 then {
+    true
+  } else {
+    false
+  }
+}
