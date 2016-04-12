@@ -1,11 +1,18 @@
 import os, sys, pygame, fileinput
 from pygame.locals import *
 from math import pi,sqrt,sin,cos,asin,atan
-import cubehelix as ch
 import numpy as np
+has_color = True
+try:
+    import cubehelix as ch
+except ImportError:
+    print "Noo cool cube helix :("
+    has_color = False
 
-awesome_1 = ch.cmap()
-awesome = awesome_1(np.arange(256)) 
+if has_color:
+    awesome_1 = ch.cmap()
+    awesome = awesome_1(np.arange(256)) 
+
 WHITE = 255,255,255
 GREEN = 0,255,0
 BLACK = 0,0,0
@@ -73,9 +80,11 @@ def buidBoid(line):
 
 
 def indexToCol(max,index):
-   elem = (index*255/(max))
-   (r,b,g,a) = awesome[int(elem)]
-   return (int(r*255),int(g*255),int(b*255))
+    if not has_color:
+        return (255,255,255)
+    elem = (index*255/(max))
+    (r,b,g,a) = awesome[int(elem)]
+    return (int(r*255),int(g*255),int(b*255))
     
 if __name__ == "__main__":
     boids = {}
