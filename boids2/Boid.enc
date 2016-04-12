@@ -1,0 +1,145 @@
+passive class Boid {
+  id: int
+  location: Vector
+  velocity: Vector
+  acceleration: Vector
+  r: real
+  maxforce: real -- Maximum steering force
+  maxspeed: real -- Maximum speed
+  width: int
+  height: int
+
+  def init(id: int, loc: Vector, w: int, h: int): void {
+    this.id = id;
+    this.location = loc;
+    this.acceleration = new Vector(0.0, 0.0);
+    let angle = randomReal(0, 3.14 * 2);
+    this.velocity = new Vector(cos(angle), sin(angle));
+    this.r = 2.0;
+    this.maxspeed = 2.0;
+    this.maxforce = 0.03;
+    this.width = w;
+    this.height = h
+  }
+
+  def show(id: int) : void {
+    print("{},{},{},{},{}\n",
+          id,
+          this.location.x, this.location.y,
+          this.velocity.x, this.velocity.y)
+  }
+
+  def move(locations: [Vector], velocities: [Vector]): void {
+    -- calculation
+    let sep = this.separation(locations);
+    let ali = this.align(locations, velocities);
+    let coh = this.cohesion(locations);
+    -- Arbitrarily weight these forces
+    let weightedSep = sep.mul(1.0);
+    let weightedAli = ali.mul(1.0);
+    let weightedCoh = coh.mul(1.5);
+    -- Add the force vectors to acceleration
+    this.acceleration = this.acceleration
+                              .add(weightedSep)
+                              .add(weightedAli)
+                              .add(weightedCoh);
+    -- Update velocity
+    this.velocity = this.velocity.add(this.acceleration)
+                          .limit(this.maxspeed); -- Limit speed
+    this.location = this.location.add(this.velocity);
+    -- Reset accelertion to 0 each cycle
+    this.acceleration = this.acceleration.mul(0);
+    this.borders();
+    this.show(this.id);
+  }
+
+  def separation(locations: [Vector]): Vector {
+    let desiredSeparation = 25.0;
+    let steer = new Vector(0.0, 0.0);
+    let count = 0;
+
+    -- For every boid in the system, check if it's too close
+    for otherLoc in locations {
+      let dist = this.location.distance(otherLoc);
+      if (dist > 0) and (dist < desiredSeparation) then {
+        let diff = this.location.sub(otherLoc);
+        let normalizedDiff = diff.normalize().div(dist);
+        steer = steer.add(normalizedDiff);
+        count = count + 1
+      }
+    };
+    if (count > 0) then
+      steer = steer.div(count);
+    if steer.magnitude() > 0 then
+      steer.normalize().
+        mul(this.maxspeed).
+        sub(this.velocity).
+        limit(this.maxforce)
+    else
+      steer
+  }
+
+  def seek(target: Vector): Vector {
+    let desired = target.sub(this.location);
+    let normalizedDesired = desired.normalize().mul(this.maxspeed);
+    normalizedDesired.sub(this.velocity).limit(this.maxforce);
+  }
+
+  -- Alignment
+  -- For every nearby boid in the system, calculate the average velocity
+  def align (locations: [Vector], velocities: [Vector]) : Vector {
+    let neighbordist = 50;
+    let sum = new Vector(0.0, 0.0);
+    let count = 0;
+    for i in [0 .. |locations|-1] {
+      let d = this.location.distance(locations[i]);
+      if (d > 0) and (d < neighbordist) then {
+        sum = sum.add(velocities[i]);
+        count = count + 1;
+      }
+    };
+    if (count > 0) then {
+      sum.div(count).
+        normalize().
+        mul(this.maxspeed).
+        sub(this.velocity).
+        limit(this.maxforce);
+    }
+    else {
+      new Vector(0.0, 0.0);
+    }
+  }
+
+  def cohesion(locations: [Vector]) : Vector {
+    let neighborDistance = 50.0;
+    let sum = new Vector(0.0, 0.0);
+    let count = 0;
+    for otherloc in locations {
+      let d = this.location.distance(otherloc);
+      if (d > 0) and (d < neighborDistance) then {
+        sum = sum.add(otherloc);
+        count = count + 1;
+      }
+    };
+    if (count > 0) then
+      this.seek(sum.div(count))
+    else
+      new Vector(0, 0)
+  }
+
+  def borders(): void {
+    let x = this.location.x;
+    let y = this.location.y;
+    if x < (0-this.r) then
+      x = this.width + this.r
+    else if x > this.width + this.r then
+      x = 0-this.r;
+
+    if y < (0-this.r) then
+      y = this.height + this.r
+    else if y > (this.height+this.r) then
+      y = 0-this.r;
+
+    this.location = new Vector(x, y);
+  }
+}

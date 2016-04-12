@@ -1,0 +1,68 @@
+import Random
+-- import Util -- commented to avoid duplicate inclusion
+import Vector
+import Boid
+import Group
+
+class Main {
+  width: int
+  height: int
+
+  def main(args: [String]): void {
+    setSeed(5);
+
+    this.width = 500;
+    this.height = 500;
+    let nBoids = 200;
+    let nSteps = 1000;
+    let groupSize = 20;
+    let flock = new Flock(this.width, this.height, nBoids/groupSize, nBoids);
+    flock!step(nSteps)
+  }
+}
+
+class Flock
+  groups : [Group]
+  moved  : int
+  nBoids : int
+
+  otherLocs: [Vector]
+  otherVels: [Vector]
+
+  def init(width: int, height: int,
+            ngroups: int, nBoids: int) : void {
+    this.groups = new [Group](ngroups);
+    this.nBoids = nBoids;
+    repeat i <- ngroups
+      this.groups[i] = new Group(nBoids, width, height, this.groups, this, i)
+  }
+
+  def step(steps: int): void {
+
+    repeat count <- steps {
+      print ("STEP {}\n", count);
+
+      this.otherLocs = new [Vector](this.nBoids);
+      this.otherVels = new [Vector](this.nBoids);
+      let j = 0;
+      for g in this.groups {
+        let f = get (g.locs_vels());
+        match f with
+        (ls, vs) =>
+          for i in [0 .. |ls|-1] {
+            this.otherLocs[j] = (ls[i]).clone(); -- Fix
+            this.otherVels[j] = (vs[i]).clone(); -- Fix
+            j = j + 1;
+          };
+      };
+
+      let futs = new [Fut void ](|this.groups|);
+      let k = 0;
+      for g in this.groups {
+        futs[k] = g.move(this.otherLocs, this.otherVels);
+        k = k + 1
+      };
+
+      for f in futs get f;
+    }
+  }
