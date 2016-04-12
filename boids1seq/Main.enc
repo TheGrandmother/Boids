@@ -1,0 +1,93 @@
+import Random
+-- import Util -- commented to avoid duplicate inclusion
+import Vector
+import Boid
+
+class Main {
+  width: int
+  height: int
+
+  def main(args: [String]): void {
+    setSeed(10);
+
+    this.width = 500;
+    this.height = 500;
+
+    let nBoids = 10;
+    if |args| > 1 then{
+      match (args[1]).to_int() with
+        Just n => nBoids = n
+        _ => ()
+    };
+
+    let nSteps = 100;
+    if |args| > 2 then {
+      match (args[2]).to_int() with
+        Just n => nSteps = n
+        _ => ()
+    };
+    print("{}\n",nBoids);
+
+    let flock = new Flock(nSteps, this.width, this.height, nBoids);
+    flock.createBoids();
+    flock!step()
+  }
+}
+
+class Flock
+  boids : [Boid] -- Use static array as a size
+  bdata : [BoidData]
+  bdata2 : [BoidData]
+  alter : bool
+  moved : int
+  steps : int
+  width : int
+  height: int
+
+
+  def init(steps: int, width: int, height: int, size: int) : void {
+    this.moved = 0;
+    this.steps = steps;
+    this.width = width;
+    this.height = height;
+    this.alter = true;
+    this.boids = new [Boid](size);
+    this.bdata = new [BoidData](size);
+    this.bdata2 = new [BoidData](size)
+  }
+
+  def createBoids(): void {
+    let len = |this.boids|;
+    repeat i <- len {
+      let bd = new BoidData(new Vector(this.width/2, this.height/2));
+      let b = new Boid(i, this.width, this.height);
+      this.boids[i] = b;
+      this.bdata[i] = bd;
+    };
+  }
+
+  def step(): void {
+    if this.steps > 0 then {
+      for b in this.boids {
+        b.move(this, if this.alter
+                     then this.bdata
+                     else this.bdata2)
+      };
+      this.steps = this.steps - 1;
+    }
+  }
+
+  def ack(bd: BoidData, i: int): void {
+    if this.alter then {
+      this.bdata2[i] = bd;
+    } else {
+      this.bdata[i] = bd;
+    };
+
+    this.moved = this.moved + 1;
+    if this.moved == |this.boids| then {
+      this.alter = not this.alter;
+      this.moved = 0;
+      this!step()
+    }
+  }
