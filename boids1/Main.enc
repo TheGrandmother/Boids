@@ -12,9 +12,22 @@ class Main {
 
     this.width = 500;
     this.height = 500;
-    let nBoids = 150;
-    let nSteps = 100000;
+
+    let nBoids = 10;
+    if |args| > 1 then{
+      match (args[1]).to_int() with
+        Just n => nBoids = n
+        _ => ()
+    };
+
+    let nSteps = 100;
+    if |args| > 2 then {
+      match (args[2]).to_int() with
+        Just n => nSteps = n
+        _ => ()
+    };
     print("{}\n",nBoids);
+
     let flock = new Flock(nSteps, this.width, this.height, nBoids);
     flock.createBoids();
     flock!step()
