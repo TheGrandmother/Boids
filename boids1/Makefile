@@ -3,7 +3,7 @@ LD = gcc
 
 MAKE    = make
 ENCORE  = encorec
-PYTHON  = python-32
+PYTHON  = python
 
 MAIN    = Main
 FILE    = $(MAIN).enc
@@ -14,13 +14,16 @@ all: main
 clean: tidy   
 	rm -f $(MAIN)
 
-main:
+main: Main.enc Boid.enc Vector.enc Util.enc
 	$(ENCORE) $(FILE)
 
 c:
 	$(ENCORE) -c $(FILE)
 
-test:
-	./$(MAIN) | $(PYTHON) $(BOIDS)
+run: main
+	./$(MAIN) 100 10000 | $(PYTHON) $(BOIDS)
+
+single: main
+	./$(MAIN) --ponythreads 1 100 10000 | $(PYTHON) $(BOIDS)
 
 .PHONY: all clean main c test
