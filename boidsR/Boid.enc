@@ -1,0 +1,260 @@
+passive class BoidData {
+  location: Vector
+  velocity: Vector
+  acceleration: Vector
+  r: real
+  maxforce: real -- Maximum steering force
+  maxspeed: real -- Maximum speed
+
+  def init(loc: Vector): void {
+    this.location = loc;
+    this.acceleration = new Vector(0.0, 0.0);
+    let angle = randomReal(0, 3.14 * 2);
+    this.velocity = new Vector(cos(angle), sin(angle));
+    this.r = 2.0;
+    this.maxspeed = 2.0;
+    this.maxforce = 0.03;
+  }
+
+  def clone(): BoidData {
+    let res = new BoidData(this.location.clone());
+    res.velocity = this.velocity.clone();
+    res.acceleration = this.acceleration.clone();
+    res.r = this.r;
+    res.maxforce = this.maxforce;
+    res.maxspeed = this.maxspeed;
+    res
+  }
+
+  def show(id: int) : void {
+    print("{},{},{},{},{}\n",
+          id,
+          this.location.x, this.location.y,
+          this.velocity.x, this.velocity.y)
+  }
+}
+
+class Boid {
+  id: int
+  data : BoidData
+  left_data : Maybe BoidData 
+  right_data : Maybe BoidData 
+  left : Boid
+  right : Boid
+  width: int
+  height: int
+
+  def init(id: int, width: int, height: int): void {
+    this.id = id;
+    this.width = width;
+    this.height = height;
+    this.left_data = Nothing : Maybe BoidData;
+    this.right_data = Nothing : Maybe BoidData;
+    this.left = null;
+    this.right = null;
+  }
+
+  def trigger() : void {
+    this.data = new BoidData(new Vector(this.height/2 + randomReal(-1.0,1.0),this.width/2 + randomReal(-1.0,1.0)));
+
+    if(this.left != null ) then{
+      this.left ! pushData(true,this.data.clone());
+    };
+
+    if (this.right != null) then {
+      this.right ! pushData(false, this.data.clone());
+    }
+
+  }
+  def setLeft(boid : Boid) : void{
+    this.left = boid;
+  }
+
+  def setRight(boid : Boid) : void {
+    this.right = boid;
+  }
+
+  def move(): void {
+    -- calculation
+    let sep = this.separation();
+--    print("Sep thing is ({},{})\n",sep.x,sep.y);
+    let ali = this.align();
+--    print("ali thing is ({},{})\n",ali.x,ali.y);
+    let coh = this.cohesion();
+--    print("coh thing is ({},{})\n",coh.x,coh.y);
+    -- Arbitrarily weight these forces
+    let weightedSep = sep.mul(1.5);
+    let weightedAli = ali.mul(1.0);
+    let weightedCoh = coh.mul(1.0);
+    -- Add the force vectors to acceleration
+    this.data.acceleration = this.data.acceleration.add(weightedSep).
+                              add(weightedAli).
+                              add(weightedCoh);
+    -- Update velocity
+    this.data.velocity = this.data.velocity.add(this.data.acceleration).
+                          limit(this.data.maxspeed); -- Limit speed
+
+    this.data.location = this.data.location.add(this.data.velocity);
+
+    -- Reset accelertion to 0 each cycle
+    this.data.acceleration = this.data.acceleration.mul(0);
+
+    this.borders();
+
+  }
+
+  def seek(target: Vector): Vector{
+    let desired = target.sub(this.data.location);
+    let normalizedDesired = desired.normalize().mul(this.data.maxspeed);
+    normalizedDesired.sub(this.data.velocity).limit(this.data.maxforce);
+  }
+
+  def pushData(left : bool, data : BoidData) : void{
+    if left then {
+      this.left_data = Just data;
+    }else{
+      this.right_data = Just data;
+    };
+    
+    if((this.right_data != Nothing) and (this.left_data != Nothing)) then {
+      this.computeAndSend()
+    }
+
+  }
+
+  -- Computes, prints and pushes
+  def computeAndSend() : void{
+    --Compute data
+    this.move();
+    -- print
+    this.data.show(this.id);
+    --push
+
+    this.left_data = Nothing;
+    this.right_data = Nothing;
+
+    if(this.left != null ) then{
+      this.left ! pushData(true,this.data.clone());
+    };
+
+    if (this.right != null) then {
+      this.right ! pushData(false, this.data.clone());
+    }
+  }
+
+
+  -- Alignment
+  -- For every nearby boid in the system, calculate the average velocity
+  def align () : Vector {
+    let neighbordist = 50;
+    let sum = new Vector(0.0, 0.0);
+    let count = 0;
+    let left = match this.left_data with Just a => a;
+    let right = match this.right_data with Just a => a;
+   
+    if(this.data.location.distance(left.location) < neighbordist) then {
+      sum = sum.add(left.velocity);
+      count = count +1;
+    };
+
+    if(this.data.location.distance(right.location) < neighbordist) then {
+      sum = sum.add(right.velocity);
+      count = count +1;
+    };
+
+    if (count > 0) then {
+      sum.div(count).
+        normalize().
+        mul(this.data.maxspeed).
+        sub(this.data.velocity).
+        limit(this.data.maxforce);
+    }
+    else {
+      new Vector(0.0, 0.0);
+    }
+  }
+
+  def cohesion() : Vector {
+    let neighborDistance = 50.0;
+    let location = this.data.location;
+    let sum = new Vector(0.0, 0.0);
+    let count = 0;
+
+    let left = match this.left_data with Just a => a;
+    let right = match this.right_data with Just a => a;
+   
+    if(this.data.location.distance(left.location) < neighborDistance) then {
+      sum = sum.add(left.location);
+      count = count +1;
+    };
+
+    if(this.data.location.distance(right.location) < neighborDistance) then {
+      sum = sum.add(right.location);
+      count = count +1;
+    };
+
+    if (count > 0) then {
+      this.seek(sum.div(count));
+    } else {
+      new Vector(0, 0);
+    }
+  }
+
+  def separation(): Vector {
+    let desiredSeparation = 25.0;
+    let steer = new Vector(0.0, 0.0);
+    let count = 0;
+
+    let left = match this.left_data with Just a => a;
+    let right = match this.right_data with Just a => a;
+
+    let dist = this.data.location.distance(left.location);
+    if(dist < desiredSeparation) then {
+
+      let diff = this.data.location.sub(left.location);
+      let normalizedDiff = diff.normalize().div(dist);
+      steer = steer.add(normalizedDiff);
+      count = count +1;
+    };
+
+    let dist = this.data.location.distance(right.location);
+    if(dist < desiredSeparation) then {
+
+      let diff = this.data.location.sub(right.location);
+      let normalizedDiff = diff.normalize().div(dist);
+      steer = steer.add(normalizedDiff);
+      count = count +1;
+
+    };
+
+    if (count > 0) then
+      steer = steer.div(count);
+    if steer.magnitude() > 0 then {
+      steer.normalize().
+        mul(this.data.maxspeed).
+        sub(this.data.velocity).
+        limit(this.data.maxforce)
+    } else {
+      steer
+    }
+  }
+
+
+  def borders(): void {
+    let x = this.data.location.x;
+    let y = this.data.location.y;
+    if x < (0-this.data.r) then {
+      x = this.width + this.data.r;
+    } else if x > this.width + this.data.r then {
+      x = 0-this.data.r;
+    };
+
+    if y < (0-this.data.r) then {
+      y = this.height + this.data.r;
+    } else if y > (this.height+this.data.r) then {
+      y = 0-this.data.r;
+    };
+
+    this.data.location = new Vector(x, y);
+  }
+}
