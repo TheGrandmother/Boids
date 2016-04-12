@@ -13,9 +13,9 @@ class Main {
 
     this.width = 500;
     this.height = 500;
-    let nBoids = 200;
+    let nBoids = 100;
     let nSteps = 1000;
-    let groupSize = 20;
+    let groupSize = nBoids; -- currently sequential -- 200;
     let flock = new Flock(this.width, this.height, nBoids/groupSize, nBoids);
     flock!step(nSteps)
   }
