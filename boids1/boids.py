@@ -1,8 +1,11 @@
 import os, sys, pygame, fileinput
 from pygame.locals import *
 from math import pi,sqrt,sin,cos,asin,atan
+import cubehelix as ch
+import numpy as np
 
-
+awesome_1 = ch.cmap()
+awesome = awesome_1(np.arange(256)) 
 WHITE = 255,255,255
 GREEN = 0,255,0
 BLACK = 0,0,0
@@ -47,10 +50,10 @@ def makeBoidPolly((pos,vel)):
     offsetted = map(lambda (xx,yy) : ((x+xx*poly_scale),(y+yy*poly_scale)),rotated)
     return offsetted
 
-def drawBoid(((x,y),(vx,vy)),index):
+def drawBoid(((x,y),(vx,vy)),index,max):
 
         pygame.draw.lines(
-                screen, index,False, makeBoidPolly(((x,y),(vx,vy))),1)
+                screen, indexToCol(max,index),False, makeBoidPolly(((x,y),(vx,vy))),1)
 
 def clearBoid(((x,y),(vx,vy))):
 
@@ -68,14 +71,20 @@ def buidBoid(line):
             )
             )
 
+
+def indexToCol(max,index):
+   elem = (index*255/(max))
+   (r,b,g,a) = awesome[int(elem)]
+   return (int(r*255),int(g*255),int(b*255))
+    
 if __name__ == "__main__":
     boids = {}
     size = width, height = 500, 500
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("pygame.draw functions ~ examples")
     pygame.init()
-
-    boid_file = open("test.txt","r");
+    max = int(raw_input())
+    print max
     line = raw_input()
     counter = 0
     while 1:
@@ -85,7 +94,7 @@ if __name__ == "__main__":
                 if index in boids:
                     clearBoid(boids[index])
                 boids[index] = data
-                drawBoid(data,WHITE)
+                drawBoid(data,index,max)
         line = raw_input()
 
         for event in pygame.event.get():
