@@ -77,11 +77,8 @@ class Boid {
   def move(): void {
     -- calculation
     let sep = this.separation();
---    print("Sep thing is ({},{})\n",sep.x,sep.y);
     let ali = this.align();
---    print("ali thing is ({},{})\n",ali.x,ali.y);
     let coh = this.cohesion();
---    print("coh thing is ({},{})\n",coh.x,coh.y);
     -- Arbitrarily weight these forces
     let weightedSep = sep.mul(1.5);
     let weightedAli = ali.mul(1.0);

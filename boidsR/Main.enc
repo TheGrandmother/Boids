@@ -32,26 +32,21 @@ class Main {
     print("{}\n",nBoids);
 
     this.boids = new [Boid](nBoids);
-    print "starting alloc";
     for i in [0..|this.boids|-1]{
       this.boids[i] = new Boid(i,this.width,this.height);
     };
-    print "ended alloc\n starting pairing";
     for j in [1..|this.boids| - 2]{
       print("Pairing {} that boid is {}\n",j,this.boids[j]);
       (this.boids[j]) ! setLeft(this.boids[j-1]);
       (this.boids[j]) ! setRight(this.boids[j+1]);
     };
-    print "Set pairing \n doing special pairing";
     (this.boids[0]) ! setLeft(this.boids[nBoids-1]);
     (this.boids[0]) ! setRight(this.boids[1]);
 
     (this.boids[nBoids-1]) ! setLeft(this.boids[nBoids-2]);
     (this.boids[nBoids-1]) ! setRight(this.boids[0]);
-    print "Special done \n triggering";
     for boid in this.boids{
       boid ! trigger()
     };
-    print "triggers completed";
   }
 }
