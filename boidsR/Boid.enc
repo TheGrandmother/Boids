@@ -79,6 +79,7 @@ class Boid {
     let sep = this.separation();
     let ali = this.align();
     let coh = this.cohesion();
+
     -- Arbitrarily weight these forces
     let weightedSep = sep.mul(1.5);
     let weightedAli = ali.mul(1.0);
