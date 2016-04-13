@@ -34,6 +34,8 @@ passive class BoidData {
   }
 }
 
+--This implementation segfaults occasionaly.  If the segfaults where to be resolved
+--some changes to the computations are still required to have desired behaviour.
 class Boid {
   id: int
   data : BoidData
