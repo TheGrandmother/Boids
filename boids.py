@@ -6,7 +6,7 @@ has_color = True
 try:
     import cubehelix as ch
 except ImportError:
-    print "Noo cool cube helix :("
+    print "Could not find cube-helix colormap. No colors."
     has_color = False
 
 if has_color:
@@ -63,21 +63,16 @@ def drawBoid(((x,y),(vx,vy)),index,max):
                 screen, indexToCol(max,index),False, makeBoidPolly(((x,y),(vx,vy))),1)
 
 def clearBoid(((x,y),(vx,vy))):
-
     pygame.draw.lines(
             screen, BLACK,True, makeBoidPolly(((x,y),(vx,vy))),1)
 
 def buidBoid(line):
     line = line.replace("\n","")
     splitted = line.split(",")        
-    return (
-            float(splitted[0]),
-            (
-                (float(splitted[1]),float(splitted[2])),
-                (float(splitted[3]),float(splitted[4]))
+    return float(splitted[0]),(
+            (float(splitted[1]),float(splitted[2])),
+            (float(splitted[3]),float(splitted[4]))
             )
-            )
-
 
 def indexToCol(max,index):
     if not has_color:
@@ -90,7 +85,6 @@ if __name__ == "__main__":
     boids = {}
     size = width, height = 500, 500
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("pygame.draw functions ~ examples")
     pygame.init()
     max = int(raw_input())
     print max

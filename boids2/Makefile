@@ -7,7 +7,7 @@ PYTHON  = python
 
 MAIN    = Main
 FILE    = $(MAIN).enc
-BOIDS   = boids.py
+BOIDS   = ../boids.py
 
 all: main
 
